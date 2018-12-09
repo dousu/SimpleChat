@@ -11,32 +11,36 @@
 </template>
 
 <script>
-var host = window.document.location.host.replace(/:.*/, "");
-var ws = new WebSocket("ws://" + host + ":3000");
-ws.onmessage = function(event) {
-  document.getElementById("messages").innerHTML =
-    "<div>" +
-    JSON.parse(event.data)
-      .toString()
-      .replace(/,/g, "</div><div>") +
-    "</div>";
-  console.log(
-    JSON.parse(event.data).toString(),
-    JSON.parse(event.data)
-      .toString()
-      .replace(/,/g, "\n")
-  );
-};
 export default {
+  mounted: function() {
+    this.host = window.document.location.host.replace(/:.*/, "");
+    this.ws = new WebSocket("ws://" + this.host + ":3000");
+    this.ws.onmessage = function(event) {
+      document.getElementById("messages").innerHTML =
+        "<div>" +
+        JSON.parse(event.data)
+          .toString()
+          .replace(/,/g, "</div><div>") +
+        "</div>";
+      console.log(
+        JSON.parse(event.data).toString(),
+        JSON.parse(event.data)
+          .toString()
+          .replace(/,/g, "\n")
+      );
+    };
+  },
   name: "SimpleChat",
   data() {
     return {
-      msg: "Welcome to Your Vue.js App"
+      msg: "Welcome to Your Vue.js App",
+      host: "",
+      ws: null
     };
   },
   methods: {
     send() {
-      ws.send(document.getElementById("msg").value);
+      this.ws.send(document.getElementById("msg").value);
     }
   }
 };
